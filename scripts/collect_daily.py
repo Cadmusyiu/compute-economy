@@ -30,21 +30,17 @@ os.makedirs(DASHBOARD_DIR, exist_ok=True)
 
 def fetch_gputracker():
     """Fetch public GPU listing stats from gputracker.dev"""
-    url = "https://www.gputracker.dev/"
-    ctx = ssl.create_default_context()
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
+    url = "https://gputracker.dev/"
     
     req = urllib.request.Request(
         url,
-        headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/120.0.0.0"}
+        headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"}
     )
     
     try:
-        with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
+        with urllib.request.urlopen(req, timeout=30) as resp:
             html = resp.read().decode("utf-8", errors="replace")
         
-        # Extract key stats from HTML (basic regex parsing)
         import re
         stats = {}
         
@@ -53,13 +49,14 @@ def fetch_gputracker():
         if listing_match:
             stats["total_listings"] = int(listing_match.group(1).replace(",", ""))
         
-        # Look for price ranges
-        price_matches = re.findall(r'\$\s*(\d+\.?\d*)\s*/\s*hr', html)
+        # Look for price ranges — filter realistic H100 rates (>$0.50/hr)
+        price_matches = re.findall(r'\$\s*(\d+\.\d+)\s*/\s*hr', html)
         if price_matches:
-            prices = [float(p) for p in price_matches]
-            stats["min_price_hr"] = min(prices)
-            stats["max_price_hr"] = max(prices)
-            stats["avg_price_hr"] = round(sum(prices) / len(prices), 2)
+            prices = [float(p) for p in price_matches if float(p) > 0.5]
+            if prices:
+                stats["min_price_hr"] = min(prices)
+                stats["max_price_hr"] = max(prices)
+                stats["avg_price_hr"] = round(sum(prices) / len(prices), 2)
         
         # GPU model counts
         gpu_models = re.findall(r'(H100|A100|B200|H200|A6000|RTX 4090|RTX 5090)[^<]*', html)
