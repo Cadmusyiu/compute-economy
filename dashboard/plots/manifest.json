@@ -1,0 +1,27 @@
+{
+  "generated_at": "2026-06-19T13:30:37.272751",
+  "plots": [
+    {
+      "name": "H100 Historical Trend",
+      "html": "h100_historical_trend.html",
+      "png": "h100_historical_trend.png",
+      "description": "SemiAnalysis data points 2023-2026 showing H100 spot price evolution"
+    },
+    {
+      "name": "GPU Generation Comparison",
+      "html": "gpu_gen_comparison.html",
+      "png": "gpu_gen_comparison.png",
+      "description": "Bar chart comparing H100, H200, B200, B300, GB200 median prices"
+    },
+    {
+      "name": "H100 Price Spread",
+      "html": "h100_spread.html",
+      "png": "h100_spread.png",
+      "description": "Provider-by-provider H100 price range showing 121x spread"
+    }
+  ],
+  "data_files": [
+    "raw_data/macro_30d_history.csv",
+    "raw_data/nvda_5yr_history.csv"
+  ]
+}
