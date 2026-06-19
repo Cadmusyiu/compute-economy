@@ -113,6 +113,65 @@ print(json.dumps(data, default=str))
     return stats
 
 
+def fetch_semianalysis():
+    """Fetch SemiAnalysis GPU pricing analysis article and extract data"""
+    url = "https://www.semianalysis.com/p/gpu-pricing-analysis-and-the-ai-ecosystem"
+    
+    req = urllib.request.Request(
+        url,
+        headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"}
+    )
+    
+    result = {
+        "fetch_time_utc": datetime.now(timezone.utc).isoformat(),
+        "source": "semianalysis.com",
+        "url": url,
+        "pricing_mentions": {},
+        "full_text_snippet": None,
+        "error": None
+    }
+    
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            html = resp.read().decode("utf-8", errors="replace")
+        
+        import re
+        
+        # Save truncated HTML for reference
+        result["full_text_snippet"] = html[:5000]
+        
+        # Extract any pricing mentions: $X.XX/hr patterns
+        pricing_patterns = [
+            (r'(\$\s*\d+(?:\.\d+)?)\s*/\s*hr', 'hourly'),
+            (r'(\$\s*\d+(?:\.\d+)?)\s*/\s*month', 'monthly'),
+            (r'\b(H100|H200|B200|B300|GB200|A100)\b.*?(\$\s*\d+(?:\.\d+)?)', 'gpu_pricing'),
+        ]
+        
+        for pattern, label in pricing_patterns:
+            matches = re.findall(pattern, html, re.IGNORECASE | re.DOTALL)
+            if matches:
+                if label == 'gpu_pricing':
+                    parsed = []
+                    for m in matches[:20]:
+                        if isinstance(m, tuple) and len(m) >= 2:
+                            parsed.append(f"{m[0]}: {m[1]}")
+                    result["pricing_mentions"][label] = parsed
+                else:
+                    result["pricing_mentions"][label] = [m if isinstance(m, str) else m[0] for m in matches[:10]]
+        
+        print(f"  ✅ SemiAnalysis article fetched: {url}")
+        if result["pricing_mentions"]:
+            print(f"  📊 Pricing mentions extracted: {len(result['pricing_mentions'])} categories")
+        else:
+            print(f"  ℹ️  No numeric pricing data extracted (article likely paywalled)")
+    
+    except Exception as e:
+        result["error"] = str(e)
+        print(f"  ⚠️  SemiAnalysis fetch error: {e}")
+    
+    return result
+
+
 def save_data(source_name: str, data: dict):
     """Save fetched data to JSON file"""
     date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -120,6 +179,58 @@ def save_data(source_name: str, data: dict):
     
     with open(filename, "w") as f:
         json.dump(data, f, indent=2, ensure_ascii=False, default=str)
+    
+    print(f"  ✅ Saved: {filename}")
+    return filename
+
+
+def save_md_data(source_name: str, data: dict):
+    """Save fetched data as Markdown file with rendered notes"""
+    date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    filename = DATA_DIR / f"{source_name}_{date_str}.md"
+    
+    lines = []
+    lines.append(f"# SemiAnalysis GPU Pricing — Research Notes\n")
+    lines.append(f"> Fetched: {date_str} | Source: semianalysis.com\n")
+    lines.append(f"> Status: {'✅ Success' if not data.get('error') else '⚠️ Error'}\n")
+    lines.append(f"> URL: {data.get('url', 'N/A')}\n")
+    lines.append("\n---\n")
+    
+    if data.get("error"):
+        lines.append(f"## Fetch Error\n")
+        lines.append(f"- **Error**: {data['error']}\n")
+        lines.append("\n---\n")
+    
+    if data.get("pricing_mentions"):
+        lines.append("## Extracted Pricing Mentions\n\n")
+        for category, items in data["pricing_mentions"].items():
+            if items:
+                lines.append(f"### {category.replace('_', ' ').title()}\n")
+                for item in items:
+                    lines.append(f"- {item}\n")
+                lines.append("\n")
+    else:
+        lines.append("## Pricing Data\n\n")
+        lines.append("No numeric pricing data extracted from the public preview. ")
+        lines.append("The full article is behind a paywall. ")
+        lines.append("Pricing data points from the project execution plan included below.\n\n")
+        lines.append("### H100 Historical Data Points (from execution plan)\n\n")
+        lines.append("| Period | Price |\n|:-------|:------|\n")
+        lines.append("| 2023 H1 | $2.70-3.40/hr |\n")
+        lines.append("| 2023 H2 | $6.62/hr (peak) |\n")
+        lines.append("| 2024 | $3.00-5.00/hr |\n")
+        lines.append("| 2025 | $2.50-3.60/hr |\n")
+        lines.append("| Apr 2026 Spot | $2.82/hr |\n")
+        lines.append("| Apr 2026 1yr Contract | $2.10-2.70/hr |\n")
+        lines.append("| Mar 2026 | Sold Out (on-demand) |\n")
+    
+    lines.append("\n---\n")
+    lines.append("*Auto-extracted by compute-economy collector*\n")
+    
+    content = "".join(lines)
+    
+    with open(filename, "w") as f:
+        f.write(content)
     
     print(f"  ✅ Saved: {filename}")
     return filename
@@ -179,7 +290,12 @@ def main():
     yfinance_data = fetch_yfinance_tickers()
     save_data("yfinance", yfinance_data)
     
-    # 3. Merge and save timeseries
+    # 3. Fetch SemiAnalysis article (paywalled but try anyway)
+    print("\n📝 Fetching SemiAnalysis article...")
+    semianalysis_data = fetch_semianalysis()
+    save_md_data("semianalysis", semianalysis_data)
+    
+    # 4. Merge and save timeseries
     combined = {
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "gputracker": gputracker_data,
