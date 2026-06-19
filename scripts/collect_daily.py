@@ -130,22 +130,30 @@ def append_to_timeseries(data: dict):
     
     row = {
         "date": date_str,
-        "h100_spot": data.get("gputracker", {}).get("avg_price_hr"),
-        "h100_min": data.get("gputracker", {}).get("min_price_hr"),
-        "h100_max": data.get("gputracker", {}).get("max_price_hr"),
-        "total_listings": data.get("gputracker", {}).get("total_listings"),
+        "H100_min": data.get("gputracker", {}).get("min_price_hr"),
+        "H100_median": data.get("gputracker", {}).get("avg_price_hr"),
+        "H100_p25": None,
+        "listings_count": data.get("gputracker", {}).get("total_listings"),
+        "SA_H100_spot": None,
+        "NVDA": None,
+        "BTC": None,
     }
     
-    # Add ticker data
+    # Add ticker data — map to existing column names
     tickers = data.get("yfinance", {}).get("tickers", {})
     for t, v in tickers.items():
         if isinstance(v, dict) and "close" in v:
-            row[f"{t}_close"] = v["close"]
+            ticker_key = t.replace("-USD", "").replace("=F", "")
+            if ticker_key == "NVDA":
+                row["NVDA"] = v["close"]
+            elif ticker_key == "BTC":
+                row["BTC"] = v["close"]
     
     # Write CSV (append or create)
+    fieldnames = ["date", "H100_min", "H100_median", "H100_p25", "listings_count", "SA_H100_spot", "NVDA", "BTC"]
     file_exists = os.path.isfile(csv_path)
     with open(csv_path, "a", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=row.keys())
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
         if not file_exists:
             writer.writeheader()
         writer.writerow(row)

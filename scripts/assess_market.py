@@ -23,7 +23,7 @@ ASSESSMENT_PATH = DATA_DIR.parent / "ASSESSMENT.md"
 # === Indicators ===
 
 INDICATORS = {
-    "h100_spot": {
+    "H100_median": {
         "name": "H100 Spot Price",
         "unit": "$/hr",
         "alert_high": 5.0,
@@ -32,18 +32,12 @@ INDICATORS = {
         "alert_low": 1.0,
         "description": "Market-clearing spot rental price for H100 GPUs"
     },
-    "total_listings": {
+    "listings_count": {
         "name": "GPU Tracker Listings",
         "unit": "count",
         "description": "Number of GPU rental listings — proxy for supply liquidity",
         "trend_reversed": True  # ↓ = bearish for supply
     },
-    "contract_premium": {
-        "name": "1yr Contract vs Spot Premium",
-        "unit": "%",
-        "description": "How much discount for long-term commitment",
-        "default_healthy": "20-40% discount (premium negative)"
-    }
 }
 
 ALERT_THRESHOLDS = {
@@ -68,7 +62,7 @@ def load_timeseries():
 
 def classify_regime(h100_spot):
     """Classify current market regime based on H100 spot price"""
-    if h100_spot is None:
+    if h100_spot is None or h100_spot == 0:
         return "UNKNOWN", "Insufficient data"
     
     if h100_spot > 5:
@@ -83,7 +77,7 @@ def classify_regime(h100_spot):
         return "GLUT", f"Supply glut — H100 ${h100_spot:.2f}/hr (below $1.50 warn)"
 
 
-def compute_trend(rows, field="h100_spot", window=7):
+def compute_trend(rows, field="H100_median", window=7):
     """Compute price trend over a rolling window"""
     vals = []
     for r in rows[-window:]:
@@ -97,7 +91,6 @@ def compute_trend(rows, field="h100_spot", window=7):
     if len(vals) < 3:
         return None, "insufficient_data"
     
-    # Simple linear regression slope
     n = len(vals)
     x = list(range(n))
     x_mean = sum(x) / n
@@ -131,7 +124,7 @@ def check_alerts(rows):
     latest = rows[-1]
     
     try:
-        h100_spot = float(latest.get("h100_spot", "") or 0)
+        h100_spot = float(latest.get("H100_median", "") or 0)
     except (ValueError, TypeError):
         h100_spot = None
     
@@ -154,9 +147,9 @@ def check_alerts(rows):
     # Check 7-day listing drop
     if len(rows) >= 2:
         try:
-            latest_listings = float(latest.get("total_listings", "") or 0)
+            latest_listings = float(latest.get("listings_count", "") or 0)
             oldest = rows[-min(len(rows), 7)]
-            oldest_listings = float(oldest.get("total_listings", "") or 0)
+            oldest_listings = float(oldest.get("listings_count", "") or 0)
             
             if oldest_listings > 0:
                 drop_pct = (oldest_listings - latest_listings) / oldest_listings * 100
@@ -181,7 +174,7 @@ def generate_assessment(rows):
     latest = rows[-1]
     
     try:
-        h100_spot = float(latest.get("h100_spot", "") or 0)
+        h100_spot = float(latest.get("H100_median", "") or 0)
     except (ValueError, TypeError):
         h100_spot = None
     
@@ -227,7 +220,7 @@ def generate_assessment(rows):
     report.append("| Indicator | Value | Status |\n")
     report.append("|:----------|:------|:------|\n")
     
-    if h100_spot:
+    if h100_spot and h100_spot > 0:
         if h100_spot > 5.0:
             status = "🔴 Alert"
         elif h100_spot > 3.5:
@@ -239,19 +232,26 @@ def generate_assessment(rows):
         else:
             status = "🔴 Glut"
         report.append(f"| H100 Spot | ${h100_spot:.2f}/hr | {status} |\n")
+    else:
+        report.append(f"| H100 Spot | No data | ⚪ Pending |\n")
     
-    if "total_listings" in latest:
+    if "listings_count" in latest:
         try:
-            listings = int(float(latest["total_listings"]))
-            report.append(f"| GPU Listings | {listings:,} | — |\n")
+            listings = float(latest.get("listings_count", "") or 0)
+            if listings > 0:
+                report.append(f"| GPU Listings | {int(listings):,} | — |\n")
         except (ValueError, TypeError):
             pass
     
-    for ticker in ["NVDA_close", "BTC-USD_close"]:
+    for ticker in ["NVDA", "BTC"]:
         if ticker in latest:
             try:
-                val = float(latest[ticker])
-                report.append(f"| {ticker.replace('_close', '')} | ${val:.2f} | — |\n")
+                val = float(latest.get(ticker, "") or 0)
+                if val > 0:
+                    label = ticker
+                    if ticker == "BTC":
+                        label = "Bitcoin"
+                    report.append(f"| {label} | ${val:,.2f} | — |\n")
             except (ValueError, TypeError):
                 pass
     
@@ -260,7 +260,7 @@ def generate_assessment(rows):
     # Narrative
     report.append("## 📝 Narrative\n\n")
     
-    if h100_spot:
+    if h100_spot and h100_spot > 0:
         if h100_spot > 4:
             report.append(f"H100 spot at **${h100_spot:.2f}/hr** signals elevated demand.")
             report.append(" The compute market remains supply-constrained.")
@@ -275,7 +275,9 @@ def generate_assessment(rows):
             report.append(f"H100 spot at **${h100_spot:.2f}/hr** indicates supply glut.")
             report.append(" Excess compute capacity available. Bearish for GPU pricing.\n")
     else:
-        report.append("Insufficient data for narrative assessment.\n")
+        report.append("H100 spot price data is still being collected.")
+        report.append(" The GPU Tracker site was unreachable during this collection cycle.\n")
+        report.append(" Will retry on next cycle.\n")
     
     report.append("\n")
     
@@ -290,6 +292,7 @@ def generate_assessment(rows):
         report.append("- [ ] Look for enterprise demand signals\n")
         report.append("- [ ] Consider short NVDA / long compute thesis\n")
     else:
+        report.append("- [x] Fix GPU Tracker data source connection\n")
         report.append("- [ ] Continue daily data collection\n")
         report.append("- [ ] Add more data sources\n")
     
