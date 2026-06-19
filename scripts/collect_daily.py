@@ -49,7 +49,24 @@ def fetch_gputracker():
         if listing_match:
             stats["total_listings"] = int(listing_match.group(1).replace(",", ""))
         
-        # Look for price ranges — filter realistic H100 rates (>$0.50/hr)
+        # Get the raw text content for better parsing
+        stats = {}
+        
+        # Count listings
+        listing_match = re.search(r'(\d[\d,]*)\s*listings?', html, re.IGNORECASE)
+        if listing_match:
+            stats["total_listings"] = int(listing_match.group(1).replace(",", ""))
+        
+        # GPU model counts
+        gpu_models = re.findall(r'(H100|A100|B200|H200|A6000|RTX 4090|RTX 5090)[^<]*', html)
+        stats["gpu_models_found"] = list(set(gpu_models))
+        
+        # Try to find specific H100 pricing - look for median/avg
+        h100_section = re.search(r'H100.*?median[^$]*\$\s*(\d+\.\d+)', html, re.DOTALL | re.IGNORECASE)
+        if h100_section:
+            stats["h100_median_hr"] = float(h100_section.group(1))
+        
+        # Price ranges — filter for realistic hourly rates (>$0.50)
         price_matches = re.findall(r'\$\s*(\d+\.\d+)\s*/\s*hr', html)
         if price_matches:
             prices = [float(p) for p in price_matches if float(p) > 0.5]
@@ -57,10 +74,6 @@ def fetch_gputracker():
                 stats["min_price_hr"] = min(prices)
                 stats["max_price_hr"] = max(prices)
                 stats["avg_price_hr"] = round(sum(prices) / len(prices), 2)
-        
-        # GPU model counts
-        gpu_models = re.findall(r'(H100|A100|B200|H200|A6000|RTX 4090|RTX 5090)[^<]*', html)
-        stats["gpu_models_found"] = list(set(gpu_models))
         
         stats["fetch_time_utc"] = datetime.now(timezone.utc).isoformat()
         stats["source"] = "gputracker.dev"
@@ -125,12 +138,13 @@ def append_to_timeseries(data: dict):
     csv_path = DATA_DIR.parent / "gpu_price_timeseries.csv"
     date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     
+    gpu = data.get("gputracker", {})
     row = {
         "date": date_str,
-        "H100_min": data.get("gputracker", {}).get("min_price_hr"),
-        "H100_median": data.get("gputracker", {}).get("avg_price_hr"),
+        "H100_min": gpu.get("min_price_hr"),
+        "H100_median": gpu.get("h100_median_hr") or gpu.get("avg_price_hr"),
         "H100_p25": None,
-        "listings_count": data.get("gputracker", {}).get("total_listings"),
+        "listings_count": gpu.get("total_listings"),
         "SA_H100_spot": None,
         "NVDA": None,
         "BTC": None,
