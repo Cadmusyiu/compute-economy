@@ -44,14 +44,6 @@ def fetch_gputracker():
         import re
         stats = {}
         
-        # Look for listing counts
-        listing_match = re.search(r'(\d[\d,]*)\s*listings?', html, re.IGNORECASE)
-        if listing_match:
-            stats["total_listings"] = int(listing_match.group(1).replace(",", ""))
-        
-        # Get the raw text content for better parsing
-        stats = {}
-        
         # Count listings
         listing_match = re.search(r'(\d[\d,]*)\s*listings?', html, re.IGNORECASE)
         if listing_match:
@@ -61,7 +53,7 @@ def fetch_gputracker():
         gpu_models = re.findall(r'(H100|A100|B200|H200|A6000|RTX 4090|RTX 5090)[^<]*', html)
         stats["gpu_models_found"] = list(set(gpu_models))
         
-        # Try to find specific H100 pricing - look for median/avg
+        # Try to find specific H100 pricing
         h100_section = re.search(r'H100.*?median[^$]*\$\s*(\d+\.\d+)', html, re.DOTALL | re.IGNORECASE)
         if h100_section:
             stats["h100_median_hr"] = float(h100_section.group(1))

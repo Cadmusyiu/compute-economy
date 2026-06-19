@@ -1,13 +1,3 @@
-[2026-06-19 21:44:00] Starting GPU data collection...
-==================================================
-Compute Economy Daily Collector — 2026-06-19 21:44 UTC
-==================================================
-
-📡 Fetching GPU Tracker...
-  ✅ Saved: /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/raw_data/gputracker_2026-06-19.json
-
-📈 Fetching YFinance tickers...
-  ✅ Saved: /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/raw_data/yfinance_2026-06-19.json
   ✅ Timeseries appended: /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/gpu_price_timeseries.csv
 
 ==================================================
@@ -106,3 +96,5 @@ Loaded 5 data points from timeseries
 
 ## 📝 Narrativ
 ...
+[2026-06-19 21:44:47] Collection complete.
+
