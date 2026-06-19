@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+
+# Data with personal tokens
+raw_data/*.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Keep CSV (timeseries data)
+!gpu_price_timeseries.csv
