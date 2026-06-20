@@ -1,129 +1,3 @@
-  GC=F: $4172.90
-  NG=F: $3.20
-  DX-Y.NYB: $100.85
-==================================================
-Compute Economy — Market Assessment Engine
-==================================================
-Loaded 7 data points from timeseries
-
-✅ Assessment saved: /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/ASSESSMENT.md
-
-==================================================
-# 🔍 Compute Economy Assessment
-> Generated: 2026-06-20 01:00 UTC
-> Data points: 7 days
-## 📊 Summary
-**Regime:** GLUT | *Supply glut — H100 $0.97/hr (below $1.50 warn)*
-
-**Trend:** 🔴 FALLING (-1.4075/day)
-
-## ⚠️ Active Alerts
-- 🟡 **🟡 Supply Glut**: $0.97/hr below warning threshold $1.5/hr
-## 📈 Key Indicators
-
-| Indicator | Value | Status |
-|:----------|:------|:------|
-| H100 Spot | $0.97/hr | 🔴 Glut |
-| GPU Listings | 5,213 | — |
-| NVDA | $210.69 | — |
-| Bitcoin | $63,475.64 | — |
-
-## 📝 Narrativ
-...
-/Users/cadmusyiu/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
-  warnings.warn(
-============================================================
-GPU Correlation Matrix Builder
-============================================================
-
-[1-4] Fetching 500-day history from Yahoo Finance...
-  Fetching NVDA (500d)...
-  Got 500 data points for NVDA
-  Fetching BTC-USD (500d)...
-  Got 498 data points for BTC-USD
-  Fetching DX-Y.NYB (500d)...
-  Got 414 data points for DX-Y.NYB
-  Fetching NG=F (500d)...
-  Got 414 data points for NG=F
-
-[5] Computing correlations...
-  Aligned 342 common trading days across all 4 assets
-
-  Correlation Matrix:
-              NVDA   BTC-USD  DX-Y.NYB      NG=F
-NVDA      1.000000 -0.167519 -0.560626 -0.219480
-BTC-USD  -0.167519  1.000000 -0.145507  0.035245
-DX-Y.NYB -0.560626 -0.145507  1.000000  0.248717
-NG=F     -0.219480  0.035245  0.248717  1.000000
-
-[6] Generating plots...
-  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_btc_overlay.png
-  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_btc_correlation.png
-  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_btc_correlation.html
-  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_dxy_overlay.png
-  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_dxy_correlation.png
-  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_dxy_correlation.html
-  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/correlation_heatmap.png
-  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/correlation_heatmap.html
-  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_500d_trend.png
-  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_500d_trend.html
-
-[7] Saving correlation matrix JSON...
-  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/raw_data/correlation_matrix.json
-  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/raw_data/nvda_500d_prices.json
-
-============================================================
-✅ Build complete!
-   Aligned data points: 342
-   Correlation matrix saved to: raw_data/correlation_matrix.json
-   Plots saved to: dashboard/plots/
-============================================================
-
---- SUMMARY ---
-{
-  "computed_at": "2026-06-20T01:00Z",
-  "period_days": 500,
-  "data_points": 342,
-  "correlations": {
-    "NVDA_vs_BTC-USD": -0.1675,
-    "NVDA_vs_DX-Y.NYB": -0.5606,
-    "NVDA_vs_NG=F": -0.2195,
-    "BTC-USD_vs_DX-Y.NYB": -0.1455,
-    "BTC-USD_vs_NG=F": 0.0352,
-    "DX-Y.NYB_vs_NG=F": 0.2487
-  }
-}
---- END SUMMARY ---
-  ✅ Data committed to git
-  ✅ Pushed to origin main
-[2026-06-20 09:00:31] Collection complete (exit: 0).
-
-[2026-06-20 15:00:04] Starting GPU data collection...
-==================================================
-Compute Economy Daily Collector — 2026-06-20 15:00 UTC
-==================================================
-
-📡 Fetching GPU Tracker...
-  ✅ Saved: /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/raw_data/gputracker_2026-06-20.json
-
-📈 Fetching YFinance tickers...
-  ✅ Saved: /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/raw_data/yfinance_2026-06-20.json
-
-📝 Fetching SemiAnalysis article...
-  ⚠️  SemiAnalysis fetch error: HTTP Error 404: Not Found
-  ✅ Saved: /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/raw_data/semianalysis_2026-06-20.md
-  ✅ Timeseries appended: /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/gpu_price_timeseries.csv
-
-==================================================
-✅ Daily collection complete!
-==================================================
-
-📊 Quick Summary:
-  H100 Avg Spot: $0.97/hr
-  Total Listings: 5213
-  NVDA: $210.69
-  BTC-USD: $63674.02
-  GC=F: $4172.90
   NG=F: $3.20
   DX-Y.NYB: $100.85
 ==================================================
@@ -208,6 +82,131 @@ NG=F     -0.219480  0.035245  0.248717  1.000000
 --- SUMMARY ---
 {
   "computed_at": "2026-06-20T07:00Z",
+  "period_days": 500,
+  "data_points": 342,
+  "correlations": {
+    "NVDA_vs_BTC-USD": -0.1675,
+    "NVDA_vs_DX-Y.NYB": -0.5606,
+    "NVDA_vs_NG=F": -0.2195,
+    "BTC-USD_vs_DX-Y.NYB": -0.1455,
+    "BTC-USD_vs_NG=F": 0.0352,
+    "DX-Y.NYB_vs_NG=F": 0.2487
+  }
+}
+--- END SUMMARY ---
+  ✅ Data committed to git
+  ✅ Pushed to origin main
+[2026-06-20 15:00:24] Collection complete (exit: 0).
+
+[2026-06-20 21:00:04] Starting GPU data collection...
+==================================================
+Compute Economy Daily Collector — 2026-06-20 21:00 UTC
+==================================================
+
+📡 Fetching GPU Tracker...
+  ✅ Saved: /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/raw_data/gputracker_2026-06-20.json
+
+📈 Fetching YFinance tickers...
+  ✅ Saved: /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/raw_data/yfinance_2026-06-20.json
+
+📝 Fetching SemiAnalysis article...
+  ⚠️  SemiAnalysis fetch error: HTTP Error 404: Not Found
+  ✅ Saved: /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/raw_data/semianalysis_2026-06-20.md
+  ✅ Timeseries appended: /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/gpu_price_timeseries.csv
+
+==================================================
+✅ Daily collection complete!
+==================================================
+
+📊 Quick Summary:
+  H100 Avg Spot: $0.97/hr
+  Total Listings: 5213
+  NVDA: $210.69
+  BTC-USD: $63581.42
+  GC=F: $4172.90
+  NG=F: $3.20
+  DX-Y.NYB: $100.85
+==================================================
+Compute Economy — Market Assessment Engine
+==================================================
+Loaded 10 data points from timeseries
+
+✅ Assessment saved: /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/ASSESSMENT.md
+
+==================================================
+# 🔍 Compute Economy Assessment
+> Generated: 2026-06-20 13:00 UTC
+> Data points: 10 days
+## 📊 Summary
+**Regime:** GLUT | *Supply glut — H100 $0.97/hr (below $1.50 warn)*
+
+**Trend:** 🟢 RISING (0.2857/day)
+
+## ⚠️ Active Alerts
+- 🟡 **🟡 Supply Glut**: $0.97/hr below warning threshold $1.5/hr
+## 📈 Key Indicators
+
+| Indicator | Value | Status |
+|:----------|:------|:------|
+| H100 Spot | $0.97/hr | 🔴 Glut |
+| GPU Listings | 5,213 | — |
+| NVDA | $210.69 | — |
+| Bitcoin | $63,581.42 | — |
+
+## 📝 Narrative
+...
+/Users/cadmusyiu/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+============================================================
+GPU Correlation Matrix Builder
+============================================================
+
+[1-4] Fetching 500-day history from Yahoo Finance...
+  Fetching NVDA (500d)...
+  Got 500 data points for NVDA
+  Fetching BTC-USD (500d)...
+  Got 499 data points for BTC-USD
+  Fetching DX-Y.NYB (500d)...
+  Got 414 data points for DX-Y.NYB
+  Fetching NG=F (500d)...
+  Got 414 data points for NG=F
+
+[5] Computing correlations...
+  Aligned 342 common trading days across all 4 assets
+
+  Correlation Matrix:
+              NVDA   BTC-USD  DX-Y.NYB      NG=F
+NVDA      1.000000 -0.167519 -0.560626 -0.219480
+BTC-USD  -0.167519  1.000000 -0.145507  0.035245
+DX-Y.NYB -0.560626 -0.145507  1.000000  0.248717
+NG=F     -0.219480  0.035245  0.248717  1.000000
+
+[6] Generating plots...
+  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_btc_overlay.png
+  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_btc_correlation.png
+  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_btc_correlation.html
+  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_dxy_overlay.png
+  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_dxy_correlation.png
+  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_dxy_correlation.html
+  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/correlation_heatmap.png
+  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/correlation_heatmap.html
+  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_500d_trend.png
+  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/dashboard/plots/nvda_500d_trend.html
+
+[7] Saving correlation matrix JSON...
+  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/raw_data/correlation_matrix.json
+  Saved /Users/cadmusyiu/.openclaw/workspace/references/compute-economy/raw_data/nvda_500d_prices.json
+
+============================================================
+✅ Build complete!
+   Aligned data points: 342
+   Correlation matrix saved to: raw_data/correlation_matrix.json
+   Plots saved to: dashboard/plots/
+============================================================
+
+--- SUMMARY ---
+{
+  "computed_at": "2026-06-20T13:00Z",
   "period_days": 500,
   "data_points": 342,
   "correlations": {
