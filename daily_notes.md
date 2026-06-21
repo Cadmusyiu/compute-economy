@@ -33,3 +33,10 @@
 - NVDA: flat $210.69
 - BTC: API returned None (no data)
 - Listings count: not captured
+
+## 2026-06-21
+- H100 spot: $8.97/hr (min) | $8.97/hr (median)
+- H100 P25: $8.97/hr
+- Listings: N/A
+- NVDA: $210.69
+- BTC: N/A
