@@ -5,7 +5,7 @@
 
 ---
 ## Fetch Error
-- **Error**: HTTP Error 429: Too Many Requests
+- **Error**: HTTP Error 404: Not Found
 
 ---
 ## Pricing Data
