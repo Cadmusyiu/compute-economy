@@ -1,10 +1,10 @@
 # 🔍 Compute Economy Assessment
-> Generated: 2026-06-23 07:00 UTC
-> Data points: 21 days
+> Generated: 2026-06-23 13:00 UTC
+> Data points: 22 days
 ## 📊 Summary
 **Regime:** GLUT | *Supply glut — H100 $0.97/hr (below $1.50 warn)*
 
-**Trend:** ⚪ FLAT
+**Trend:** 🔴 FALLING (-0.5714/day)
 
 ## ⚠️ Active Alerts
 - 🟡 **🟡 Supply Glut**: $0.97/hr below warning threshold $1.5/hr
@@ -15,7 +15,7 @@
 | H100 Spot | $0.97/hr | 🔴 Glut |
 | GPU Listings | 5,213 | — |
 | NVDA | $208.65 | — |
-| Bitcoin | $62,830.20 | — |
+| Bitcoin | $62,186.04 | — |
 
 ## 📝 Narrative
 
