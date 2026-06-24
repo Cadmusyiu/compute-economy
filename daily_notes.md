@@ -61,3 +61,16 @@
 - BTC: $65,078 → $64,069 (-1.55%) via secondary feed
 - SA spot/H100 listings: same as yesterday
 - ⚠️ Note: GPU tracker showing only 1 listing at $8.97 — thin data, may reflect scraping issue rather than true market
+
+## 2026-06-24
+- H100 spot: $8.97/hr (min) | $8.97/hr (median)
+- H100 P25: $8.97/hr
+- Listings: N/A
+- NVDA: $200.04
+- BTC: N/A
+
+### Change vs Yesterday (2026-06-23)
+- 🔻 NVDA: $208.65 → $200.04 (-4.12% / -$8.61) — notable 2-day decline
+- BTC: $62,830 → $62,938 (+0.17%) — minor rebound
+- H100 spot: unchanged at $8.97/hr across min/median/P25
+- ⚠️ GPU tracker still showing only 1 listing — data quality concern persists
