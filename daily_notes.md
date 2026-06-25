@@ -74,3 +74,10 @@
 - BTC: $62,830 → $62,938 (+0.17%) — minor rebound
 - H100 spot: unchanged at $8.97/hr across min/median/P25
 - ⚠️ GPU tracker still showing only 1 listing — data quality concern persists
+
+## 2026-06-25
+- H100 spot: $8.97/hr (min) | $8.97/hr (median)
+- H100 P25: $8.97/hr
+- Listings: N/A
+- NVDA: $199.00
+- BTC: N/A
