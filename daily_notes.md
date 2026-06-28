@@ -95,3 +95,10 @@
 - Listings: N/A
 - NVDA: $192.53
 - BTC: N/A
+
+## 2026-06-28
+- H100 spot: $8.97/hr (min) | $8.97/hr (median)
+- H100 P25: $8.97/hr
+- Listings: N/A
+- NVDA: $192.53
+- BTC: N/A
